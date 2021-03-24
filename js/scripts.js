@@ -96,7 +96,7 @@ function showModal(employee) {
   const { street, city, state, postcode } = employee.location;
   const address = `${street.number} ${street.name}, ${city}, ${state} ${postcode}`;
   const dateString = employee.dob.date;
-  // const birthday = parseDate(dateString);
+  const birthday = parseDate(dateString);
   const html = `<img class="modal-img" src="${image}" alt="profile picture">
                 <h3 id="${firstName}-${lastName}" class="modal-name cap">${firstName} ${lastName}</h3>
                 <p class="modal-text">${email}</p>
@@ -104,9 +104,24 @@ function showModal(employee) {
                 <hr>
                 <p class="modal-text">${cell}</p>
                 <p class="modal-text">${address}</p>
-                <p class="modal-text">Birthday: 10/21/2015</p>`;
+                <p class="modal-text">Birthday: ${birthday}</p>`;
   // insert info to the container
   modalInfoContainer.insertAdjacentHTML('beforeend', html);
   // display the modal - will stay displayed if already there
   modalContainer.style.display = 'block';
 }
+
+/**
+ * date parser
+ * @param date {date}
+ */
+const parseDate = (date) => {
+  // need month / day / year
+  // example input = 1957-11-16T01:45:46.027Z
+  // so arrives as full year-month-day
+  const year = date.substr(2, 2);
+  const month = date.substr(5, 2);
+  const day = date.substr(8, 2);
+  const parsedDate = `${month}/${day}/${year}`;
+  return parsedDate;
+};
