@@ -139,7 +139,7 @@ function showModal(employee) {
   // insert info to the container
   modalInfoContainer.insertAdjacentHTML('beforeend', html);
   // display the modal - will stay displayed if already there
-  modalContainer.style.display = 'block';
+  modalContainer.style.display = '';
 }
 
 /**
