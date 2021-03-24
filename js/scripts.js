@@ -17,6 +17,7 @@ fetch(
       employee.isHidden = false;
     }
     // console.log(employeeObjectList);
+    addSearchbar();
     createEmployeeCards(employeeObjectList);
     employeeClickHandler(employeeObjectList);
     createModal();
@@ -25,6 +26,37 @@ fetch(
 // ---------------------
 // Helper Functions
 // ---------------------
+
+/**
+ * add a searchbar to the DOM
+ */
+function addSearchbar() {
+  const html = `<form action="#" method="get">
+                  <input type="search" id="search-input" class="search-input" placeholder="Search...">
+                  <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
+                </form>`;
+  searchbar.insertAdjacentHTML('beforeend', html);
+  const form = document.querySelector('form');
+  form.addEventListener('submit', searchSubmitHandler);
+}
+
+/**
+ * search submit handler
+ */
+function searchSubmitHandler() {
+  const input = document.querySelector('#search-input');
+  query = input.value.toLowerCase();
+  const employeeList = gallery.children;
+  for (let i = 0; i < employeeList.length; i++) {
+    let name = employeeList[i].querySelector('#name').textContent;
+    if (name.toLowerCase().indexOf(query) > -1) {
+      employeeList[i].style.display = '';
+    } else {
+      employeeList[i].style.display = 'none';
+    }
+  }
+  input.value = '';
+}
 
 /**
  * create employee cards and add to DOM
