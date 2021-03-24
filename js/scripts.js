@@ -18,7 +18,7 @@ fetch(
     }
     // console.log(employeeObjectList);
     createEmployeeCards(employeeObjectList);
-    clickHandler(employeeObjectList);
+    employeeClickHandler(employeeObjectList);
     createModal();
   });
 
@@ -52,7 +52,7 @@ function createEmployeeCards(employees) {
 /**
  * click handler to add eventlistener to each card
  */
-function clickHandler(employeeObjectList) {
+function employeeClickHandler(employeeObjectList) {
   // convert node list to array to use array methods
   const employeeDOMList = [...gallery.children];
   employeeDOMList.forEach((employee) => {
@@ -76,6 +76,8 @@ function createModal() {
                 </div>`;
   body.insertAdjacentHTML('beforeend', html);
   document.querySelector('.modal-container').style.display = 'none';
+  const modalCloseBtn = document.querySelector('#modal-close-btn');
+  modalCloseBtn.addEventListener('click', closeModal);
 }
 
 /**
@@ -83,11 +85,8 @@ function createModal() {
  * @param employee {object} - all info about employee
  */
 function showModal(employee) {
-  modalContainer = document.querySelector('.modal-container');
-  modalInfoContainer = document.querySelector('.modal-info-container');
-  // wipe the current info
-  console.log(employee);
-  modalInfoContainer.innerHTML = '';
+  const modalContainer = document.querySelector('.modal-container');
+  const modalInfoContainer = document.querySelector('.modal-info-container');
   const firstName = employee.name.first;
   const lastName = employee.name.last;
   const cell = parseCell(employee.cell);
@@ -109,6 +108,17 @@ function showModal(employee) {
   modalInfoContainer.insertAdjacentHTML('beforeend', html);
   // display the modal - will stay displayed if already there
   modalContainer.style.display = 'block';
+}
+
+/**
+ * close the modal
+ */
+function closeModal() {
+  const modal = document.querySelector('.modal-container');
+  modalInfoContainer = document.querySelector('.modal-info-container');
+  modal.style.display = 'none';
+  // wipe the current info
+  modalInfoContainer.innerHTML = '';
 }
 
 /**
