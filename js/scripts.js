@@ -9,8 +9,17 @@ fetch(
   'https://randomuser.me/api/?results=12&inc=name,email,location,cell,dob,picture&nat=us'
 )
   .then((response) => response.json())
-  .then(({ results }) => {
-    createEmployeeCards(results);
+  .then(({ results: employeeObjectList }) => {
+    // add an index and isHidden to find and hide
+    for (let i = 0; i < employeeObjectList.length; i++) {
+      const employee = employeeObjectList[i];
+      employee.id = i;
+      employee.isHidden = false;
+    }
+    // console.log(employeeObjectList);
+    createEmployeeCards(employeeObjectList);
+    clickHandler(employeeObjectList);
+    createModal();
   });
 
 // ---------------------
@@ -23,17 +32,81 @@ fetch(
  */
 function createEmployeeCards(employees) {
   const htmlArray = employees.map((employee) => {
-    return `<div class="card">
+    // attaching the id - using strategy from React list items
+    return `<div class="card" id="${employee.id}">
                 <div class="card-img-container">
                   <img class="card-img" src="${employee.picture.large}" alt="profile picture">
                 </div>
                 <div class="card-info-container">
                   <h3 id="name" class="card-name cap">${employee.name.first} ${employee.name.last}</h3>
-                  <p class="card-text"><a href="mailto:${employee.email}">${employee.email}</a></p>
+                  <p class="card-text">${employee.email}</p>
                   <p class="card-text cap">${employee.location.city}, ${employee.location.state}</p>
                 </div>
               </div>`;
   });
   const htmlOutput = htmlArray.join('');
+  // add in one go to reduce calls to DOM
   gallery.insertAdjacentHTML('beforeend', htmlOutput);
+}
+
+/**
+ * click handler to add eventlistener to each card
+ */
+function clickHandler(employeeObjectList) {
+  // convert node list to array to use array methods
+  const employeeDOMList = [...gallery.children];
+  employeeDOMList.forEach((employee) => {
+    employee.addEventListener('click', (event) => {
+      const index = event.currentTarget.id;
+      showModal(employeeObjectList[index]);
+    });
+  });
+}
+
+/**
+ * create the frame for the modal and hide it with inline style
+ */
+function createModal() {
+  const html = `<div class="modal-container">
+                  <div class="modal">
+                    <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
+                    <div class="modal-info-container">
+                    </div>
+                  </div>
+                </div>`;
+  body.insertAdjacentHTML('beforeend', html);
+  document.querySelector('.modal-container').style.display = 'none';
+}
+
+/**
+ * create a modal window based on clicked employee
+ * @param employee {object} - all info about employee
+ */
+function showModal(employee) {
+  modalContainer = document.querySelector('.modal-container');
+  modalInfoContainer = document.querySelector('.modal-info-container');
+  // wipe the current info
+  console.log(employee);
+  modalInfoContainer.innerHTML = '';
+  const firstName = employee.name.first;
+  const lastName = employee.name.last;
+  const cell = employee.cell;
+  const email = employee.email;
+  const image = employee.picture.large;
+  const { street, city, state, postcode } = employee.location;
+  const address = `${street.number} ${street.name}, ${city}, ${state} ${postcode}`;
+  const dateString = employee.dob.date;
+  // const birthday = parseDate(dateString);
+  const html = `<img class="modal-img" src="${image}" alt="profile picture">
+                <h3 id="${firstName}-${lastName}" class="modal-name cap">${firstName} ${lastName}</h3>
+                <p class="modal-text">${email}</p>
+                <p class="modal-text cap">${city}</p>
+                <hr>
+                <p class="modal-text">${cell}</p>
+                <p class="modal-text">${address}</p>
+                <p class="modal-text">Birthday: 10/21/2015</p>`;
+  // insert info to the container
+  modalInfoContainer.insertAdjacentHTML('beforeend', html);
+  // display the modal - will stay displayed if already there
+  modalContainer.style.display = 'block';
 }
