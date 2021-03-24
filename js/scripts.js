@@ -90,7 +90,7 @@ function showModal(employee) {
   modalInfoContainer.innerHTML = '';
   const firstName = employee.name.first;
   const lastName = employee.name.last;
-  const cell = employee.cell;
+  const cell = parseCell(employee.cell);
   const email = employee.email;
   const image = employee.picture.large;
   const { street, city, state, postcode } = employee.location;
@@ -115,7 +115,7 @@ function showModal(employee) {
  * date parser
  * @param date {date}
  */
-const parseDate = (date) => {
+function parseDate(date) {
   // need month / day / year
   // example input = 1957-11-16T01:45:46.027Z
   // so arrives as full year-month-day
@@ -124,4 +124,16 @@ const parseDate = (date) => {
   const day = date.substr(8, 2);
   const parsedDate = `${month}/${day}/${year}`;
   return parsedDate;
-};
+}
+
+/**
+ * cell parser
+ * @param cell {string}
+ */
+function parseCell(cell) {
+  // cell to be in the format (XXX) XXX-XXXX
+  // all cells from data come as (XXX)-XXX-XXXX
+  // so only need to replace 6th char as a space
+  const parsedCell = cell.replace(cell[5], ' ');
+  return parsedCell;
+}
