@@ -1,7 +1,6 @@
 const body = document.querySelector('body');
 const searchbar = document.querySelector('.search-container');
 const gallery = document.querySelector('#gallery');
-
 // ---------------------
 // Fetch Request
 // ---------------------
@@ -10,23 +9,21 @@ fetch(
 )
   .then((response) => response.json())
   .then(({ results: employeeObjectList }) => {
-    // add an index and isHidden to find and hide
+    // add an id to each employee
     for (let i = 0; i < employeeObjectList.length; i++) {
       const employee = employeeObjectList[i];
-      employee.id = i;
-      employee.isHidden = false;
+      let name = `${employee.name.first}-${employee.name.last}`;
+      employee.id = name.toLowerCase();
     }
-    // console.log(employeeObjectList);
     addSearchbar();
     createEmployeeCards(employeeObjectList);
     employeeClickHandler(employeeObjectList);
-    createModal();
+    addModal();
+    modalClickHandler(employeeObjectList);
   });
-
 // ---------------------
-// Helper Functions
+// SEARCH FUNCTIONS
 // ---------------------
-
 /**
  * add a searchbar to the DOM
  */
@@ -39,7 +36,6 @@ function addSearchbar() {
   const form = document.querySelector('form');
   form.addEventListener('submit', searchSubmitHandler);
 }
-
 /**
  * search submit handler
  */
@@ -55,17 +51,18 @@ function searchSubmitHandler() {
       employeeList[i].style.display = 'none';
     }
   }
-  input.value = '';
 }
-
+// ---------------------
+// EMPLOYEE CARD FUNCTIONS
+// ---------------------
 /**
  * create employee cards and add to DOM
- * @param employees {object} - all info about each employee
+ * @param employeeObjectList {object} - all info about each employee
  */
-function createEmployeeCards(employees) {
-  const htmlArray = employees.map((employee) => {
+function createEmployeeCards(employeeObjectList) {
+  const htmlArray = employeeObjectList.map((employee) => {
     // attaching the id - using strategy from React list items
-    return `<div class="card" id="${employee.id}">
+    return `<div class="card" data-id="${employee.id}">
                 <div class="card-img-container">
                   <img class="card-img" src="${employee.picture.large}" alt="profile picture">
                 </div>
@@ -80,38 +77,108 @@ function createEmployeeCards(employees) {
   // add in one go to reduce calls to DOM
   gallery.insertAdjacentHTML('beforeend', htmlOutput);
 }
-
 /**
  * click handler to add eventlistener to each card
+ * @param employeeObjectList {object} - all info about each employee
  */
 function employeeClickHandler(employeeObjectList) {
   // convert node list to array to use array methods
   const employeeDOMList = [...gallery.children];
   employeeDOMList.forEach((employee) => {
     employee.addEventListener('click', (event) => {
-      const index = event.currentTarget.id;
-      showModal(employeeObjectList[index]);
+      const id = event.currentTarget.dataset.id;
+      let employeeObject;
+      for (let employee of employeeObjectList) {
+        if (employee.id === id) employeeObject = employee;
+      }
+      showModal(employeeObject);
     });
   });
 }
-
+// ---------------------
+// MODAL FUNCTIONS
+// ---------------------
 /**
  * create the frame for the modal and hide it with inline style
+ * adding the modal toggle buttons and listeners beneath
  */
-function createModal() {
+function addModal() {
   const html = `<div class="modal-container">
                   <div class="modal">
                     <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
                     <div class="modal-info-container">
                     </div>
                   </div>
+                  <div class="modal-btn-container">
+                    <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
+                    <button type="button" id="modal-next" class="modal-next btn">Next</button>
+                  </div>
                 </div>`;
   body.insertAdjacentHTML('beforeend', html);
   document.querySelector('.modal-container').style.display = 'none';
+}
+/**
+ * modal close and toggle click handler
+ * @param employeeObjectList {object} - all info about each employee
+ */
+function modalClickHandler(employeeObjectList) {
+  // close button
   const modalCloseBtn = document.querySelector('#modal-close-btn');
   modalCloseBtn.addEventListener('click', closeModal);
+  // toggle buttons
+  const modalPrevBtn = document.querySelector('#modal-prev');
+  const modalNextBtn = document.querySelector('#modal-next');
+  modalPrevBtn.addEventListener('click', () =>
+    modalToggle('prev', employeeObjectList)
+  );
+  modalNextBtn.addEventListener('click', () =>
+    modalToggle('next', employeeObjectList)
+  );
 }
-
+/**
+ * search for next employee
+ * @param direction {string} - options are 'prev' or 'next'
+ * @param employeeObjectList {object} - all info about each employee
+ */
+function modalToggle(direction, employeeObjectList) {
+  // get list of visible employees from the DOM
+  const visibleEmployeeList = [...gallery.children].filter((card) => {
+    return card.style.display === '';
+  });
+  // get id of the employee displayed in the modal
+  const displayedEmployee = document.querySelector('.modal-name').id;
+  // find the index of displayed in full list
+  let currentIndex;
+  for (let i = 0; i < visibleEmployeeList.length; i++) {
+    if (visibleEmployeeList[i].dataset.id === displayedEmployee) {
+      currentIndex = i;
+    }
+  }
+  // different routes for 'prev' or 'next' btn press
+  if (direction === 'prev') {
+    // if it exists and is not first value - display employee
+    if (currentIndex > 0) {
+      const nextValueLower = currentIndex - 1;
+      const id = visibleEmployeeList[nextValueLower].dataset.id;
+      let employeeObject;
+      for (let employee of employeeObjectList) {
+        if (employee.id === id) employeeObject = employee;
+      }
+      showModal(employeeObject);
+    }
+  } else if (direction === 'next') {
+    // if it exists and is not last value - display employee
+    if (currentIndex < visibleEmployeeList.length) {
+      const nextValueLower = currentIndex + 1;
+      const id = visibleEmployeeList[nextValueLower].dataset.id;
+      let employeeObject;
+      for (let employee of employeeObjectList) {
+        if (employee.id === id) employeeObject = employee;
+      }
+      showModal(employeeObject);
+    }
+  }
+}
 /**
  * create a modal window based on clicked employee
  * @param employee {object} - all info about employee
@@ -121,6 +188,8 @@ function showModal(employee) {
   const modalInfoContainer = document.querySelector('.modal-info-container');
   const firstName = employee.name.first;
   const lastName = employee.name.last;
+  // add id to help locate
+  const idName = firstName.toLowerCase() + `-` + lastName.toLowerCase();
   const cell = parseCell(employee.cell);
   const email = employee.email;
   const image = employee.picture.large;
@@ -129,19 +198,23 @@ function showModal(employee) {
   const dateString = employee.dob.date;
   const birthday = parseDate(dateString);
   const html = `<img class="modal-img" src="${image}" alt="profile picture">
-                <h3 id="${firstName}-${lastName}" class="modal-name cap">${firstName} ${lastName}</h3>
+                <h3 id="${idName}" class="modal-name cap">${firstName} ${lastName}</h3>
                 <p class="modal-text">${email}</p>
                 <p class="modal-text cap">${city}</p>
                 <hr>
                 <p class="modal-text">${cell}</p>
                 <p class="modal-text">${address}</p>
                 <p class="modal-text">Birthday: ${birthday}</p>`;
+  // wipe the current info
+  modalInfoContainer.innerHTML = '';
   // insert info to the container
   modalInfoContainer.insertAdjacentHTML('beforeend', html);
   // display the modal - will stay displayed if already there
   modalContainer.style.display = '';
 }
-
+// ---------------------
+// MODAL BUTTON FUNCTIONS
+// ---------------------
 /**
  * close the modal
  */
@@ -149,10 +222,10 @@ function closeModal() {
   const modal = document.querySelector('.modal-container');
   modalInfoContainer = document.querySelector('.modal-info-container');
   modal.style.display = 'none';
-  // wipe the current info
-  modalInfoContainer.innerHTML = '';
 }
-
+// ---------------------
+// HELPER FUNCTIONS
+// ---------------------
 /**
  * date parser
  * @param date {date}
@@ -167,7 +240,6 @@ function parseDate(date) {
   const parsedDate = `${month}/${day}/${year}`;
   return parsedDate;
 }
-
 /**
  * cell parser
  * @param cell {string}
