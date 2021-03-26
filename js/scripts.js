@@ -20,6 +20,9 @@ fetch(
     employeeClickHandler(employeeObjectList);
     addModal();
     modalClickHandler(employeeObjectList);
+  })
+  .catch((error) => {
+    console.error('Error:', error);
   });
 // ---------------------------------------
 // SEARCH FUNCTIONS
