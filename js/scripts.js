@@ -1,9 +1,9 @@
 const body = document.querySelector('body');
 const searchbar = document.querySelector('.search-container');
 const gallery = document.querySelector('#gallery');
-// ---------------------
+// ---------------------------------------
 // Fetch Request
-// ---------------------
+// ---------------------------------------
 fetch(
   'https://randomuser.me/api/?results=12&inc=name,email,location,cell,dob,picture&nat=us'
 )
@@ -21,9 +21,9 @@ fetch(
     addModal();
     modalClickHandler(employeeObjectList);
   });
-// ---------------------
+// ---------------------------------------
 // SEARCH FUNCTIONS
-// ---------------------
+// ---------------------------------------
 /**
  * add a searchbar to the DOM
  */
@@ -40,21 +40,24 @@ function addSearchbar() {
  * search submit handler
  */
 function searchSubmitHandler() {
-  const input = document.querySelector('#search-input');
-  query = input.value.toLowerCase();
-  const employeeList = gallery.children;
-  for (let i = 0; i < employeeList.length; i++) {
-    let name = employeeList[i].querySelector('#name').textContent;
-    if (name.toLowerCase().indexOf(query) > -1) {
-      employeeList[i].style.display = '';
+  const query = document.querySelector('#search-input').value.toLowerCase();
+  const employeeDOMList = [...gallery.children];
+  for (let employee of employeeDOMList) {
+    const employeeName = employee
+      .querySelector('#name')
+      .textContent.toLowerCase();
+    // check the name has those joined characters
+    const isValid = employeeName.indexOf(query) > -1;
+    if (isValid) {
+      employee.style.display = '';
     } else {
-      employeeList[i].style.display = 'none';
+      employee.style.display = 'none';
     }
   }
 }
-// ---------------------
+// ---------------------------------------
 // EMPLOYEE CARD FUNCTIONS
-// ---------------------
+// ---------------------------------------
 /**
  * create employee cards and add to DOM
  * @param employeeObjectList {object} - all info about each employee
@@ -95,9 +98,9 @@ function employeeClickHandler(employeeObjectList) {
     });
   });
 }
-// ---------------------
+// ---------------------------------------
 // MODAL FUNCTIONS
-// ---------------------
+// ---------------------------------------
 /**
  * create the frame for the modal and hide it with inline style
  * adding the modal toggle buttons and listeners beneath
@@ -212,9 +215,6 @@ function showModal(employee) {
   // display the modal - will stay displayed if already there
   modalContainer.style.display = '';
 }
-// ---------------------
-// MODAL BUTTON FUNCTIONS
-// ---------------------
 /**
  * close the modal
  */
@@ -223,9 +223,9 @@ function closeModal() {
   modalInfoContainer = document.querySelector('.modal-info-container');
   modal.style.display = 'none';
 }
-// ---------------------
+// ---------------------------------------
 // HELPER FUNCTIONS
-// ---------------------
+// ---------------------------------------
 /**
  * date parser
  * @param date {date}
