@@ -94,11 +94,33 @@ You’ll use the Random User Generator API (https://randomuser.me/) to grab info
 
 ## Browser Testing
 
-[TBC]
+This was tested on the following browsers:
+Chrome 89, Safari 14.03 and Firefox 87.
+
+Functionality is the same. The search input cancel button is different across browsers.
 
 ## Notes from the Build
 
-[TBC]
+### Added Elements
+
+- Error handling in fetch request
+
+  - Simple console error message enabled
+
+- CSS Root color scheme variables added
+
+- Simple color changes to `h1`, `body`
+
+- Border to cards and image on hover [desktop only]
+
+  - added on desktop only like card background color
+
+  - transparent border and scale transform used to img to avoid affecting surrounding elements
+
+- `modal-close-btn` styles on hover [desktop only]
+
+- `modal-text` select color change
+  - as no option to copy to clipboard or a link, users will copy paste so this interactivity has been added.
 
 ## Treehouse Frontend Techdegree Version
 
