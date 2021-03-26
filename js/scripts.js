@@ -118,6 +118,7 @@ function addModal() {
                   </div>
                 </div>`;
   body.insertAdjacentHTML('beforeend', html);
+  // remove the modal from display at the start
   document.querySelector('.modal-container').style.display = 'none';
 }
 /**
@@ -125,12 +126,10 @@ function addModal() {
  * @param employeeObjectList {object} - all info about each employee
  */
 function modalClickHandler(employeeObjectList) {
-  // close button
   const modalCloseBtn = document.querySelector('#modal-close-btn');
-  modalCloseBtn.addEventListener('click', closeModal);
-  // toggle buttons
   const modalPrevBtn = document.querySelector('#modal-prev');
   const modalNextBtn = document.querySelector('#modal-next');
+  modalCloseBtn.addEventListener('click', closeModal);
   modalPrevBtn.addEventListener('click', () =>
     modalToggle('prev', employeeObjectList)
   );
@@ -149,11 +148,11 @@ function modalToggle(direction, employeeObjectList) {
     return card.style.display === '';
   });
   // get id of the employee displayed in the modal
-  const displayedEmployee = document.querySelector('.modal-name').id;
+  const displayedEmployeeID = document.querySelector('.modal-name').id;
   // find the index of displayed in full list
   let currentIndex;
   for (let i = 0; i < visibleEmployeeList.length; i++) {
-    if (visibleEmployeeList[i].dataset.id === displayedEmployee) {
+    if (visibleEmployeeList[i].dataset.id === displayedEmployeeID) {
       currentIndex = i;
     }
   }
@@ -171,9 +170,9 @@ function modalToggle(direction, employeeObjectList) {
     }
   } else if (direction === 'next') {
     // if it exists and is not last value - display employee
-    if (currentIndex < visibleEmployeeList.length) {
-      const nextValueLower = currentIndex + 1;
-      const id = visibleEmployeeList[nextValueLower].dataset.id;
+    if (currentIndex < visibleEmployeeList.length - 1) {
+      const nextValueHigher = currentIndex + 1;
+      const id = visibleEmployeeList[nextValueHigher].dataset.id;
       let employeeObject;
       for (let employee of employeeObjectList) {
         if (employee.id === id) employeeObject = employee;
@@ -220,7 +219,6 @@ function showModal(employee) {
  */
 function closeModal() {
   const modal = document.querySelector('.modal-container');
-  modalInfoContainer = document.querySelector('.modal-info-container');
   modal.style.display = 'none';
 }
 // ---------------------------------------
