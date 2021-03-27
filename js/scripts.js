@@ -53,9 +53,13 @@ function searchSubmitHandler() {
     const employeeName = employee
       .querySelector('#name')
       .textContent.toLowerCase();
+    const address = employee
+      .querySelector('#name')
+      .nextElementSibling.nextElementSibling.textContent.toLowerCase();
     // check the name has those joined characters
-    const isValid = employeeName.indexOf(query) > -1;
-    if (isValid) {
+    const nameIsValid = employeeName.indexOf(query) > -1;
+    const addressIsValid = address.indexOf(query) > -1;
+    if (nameIsValid || addressIsValid) {
       employee.style.display = '';
     } else {
       employee.style.display = 'none';
