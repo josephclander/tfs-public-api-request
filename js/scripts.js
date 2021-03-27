@@ -38,6 +38,10 @@ function addSearchbar() {
   searchbar.insertAdjacentHTML('beforeend', html);
   const form = document.querySelector('form');
   form.addEventListener('submit', searchSubmitHandler);
+  // also works for keyup on search now
+  document
+    .querySelector('#search-input')
+    .addEventListener('keyup', searchSubmitHandler);
 }
 /**
  * search submit handler
