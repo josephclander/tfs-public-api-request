@@ -20,6 +20,10 @@ fetch(
     employeeClickHandler(employeeObjectList);
     addModal();
     modalClickHandler(employeeObjectList);
+    // experiment for text selection
+    const selected = document
+      .querySelectorAll('.card')[1]
+      .querySelector('#name');
   })
   .catch((error) => {
     console.error('Error:', error);
@@ -50,20 +54,49 @@ function searchSubmitHandler() {
   const query = document.querySelector('#search-input').value.toLowerCase();
   const employeeDOMList = [...gallery.children];
   for (let employee of employeeDOMList) {
-    const employeeName = employee
-      .querySelector('#name')
-      .textContent.toLowerCase();
+    const dataName = employee.querySelector('#name').textContent.toLowerCase();
+    const employeeName = employee.querySelector('#name');
     const address = employee
       .querySelector('#name')
       .nextElementSibling.nextElementSibling.textContent.toLowerCase();
     // check the name has those joined characters
-    const nameIsValid = employeeName.indexOf(query) > -1;
+    const nameIsValid = dataName.toLowerCase().indexOf(query) > -1;
     const addressIsValid = address.indexOf(query) > -1;
     if (nameIsValid || addressIsValid) {
       employee.style.display = '';
     } else {
       employee.style.display = 'none';
     }
+    // get the index of the match
+    // create data name so text in search is constant
+
+    const matchStart = dataName.indexOf(query);
+    // this represents the start so get the length too
+    const queryLength = query.length;
+    const matchEnd = matchStart + queryLength;
+    const wordLength = dataName.length;
+    // replace text with a span with highlight class
+    const highlighted = `${dataName.substr(
+      0,
+      matchStart
+    )}<span class='highlight'>${dataName.substr(
+      matchStart,
+      queryLength
+    )}</span>${dataName.substr(matchEnd)}`;
+    if (matchStart > -1) {
+      employee.querySelector('#name').innerHTML = highlighted;
+    } else {
+      employee.querySelector('#name').innerHTML = dataName;
+    }
+    // before match + span of match + after match
+    console.log(
+      { dataName },
+      { matchStart },
+      { queryLength },
+      { matchEnd },
+      { wordLength },
+      { highlighted }
+    );
   }
 }
 // ---------------------------------------
@@ -76,12 +109,13 @@ function searchSubmitHandler() {
 function createEmployeeCards(employeeObjectList) {
   const htmlArray = employeeObjectList.map((employee) => {
     // attaching the id - using strategy from React list items
+    const fullName = `${employee.name.first} ${employee.name.last}`;
     return `<div class="card" data-id="${employee.id}">
                 <div class="card-img-container">
                   <img class="card-img" src="${employee.picture.large}" alt="profile picture">
                 </div>
                 <div class="card-info-container">
-                  <h3 id="name" class="card-name cap">${employee.name.first} ${employee.name.last}</h3>
+                  <h3 id="name" class="card-name cap" data-name="${fullName}">${fullName}</h3>
                   <p class="card-text">${employee.email}</p>
                   <p class="card-text cap">${employee.location.city}, ${employee.location.state}</p>
                 </div>
