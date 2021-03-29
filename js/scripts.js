@@ -20,10 +20,6 @@ fetch(
     employeeClickHandler(employeeObjectList);
     addModal();
     modalClickHandler(employeeObjectList);
-    // experiment for text selection
-    const selected = document
-      .querySelectorAll('.card')[1]
-      .querySelector('#name');
   })
   .catch((error) => {
     console.error('Error:', error);
