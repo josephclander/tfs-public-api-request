@@ -175,6 +175,11 @@ function modalToggle(direction, employeeObjectList) {
   const visibleEmployeeList = [...gallery.children].filter((card) => {
     return card.style.display === '';
   });
+  const prevButton = document.querySelector('#modal-prev');
+  const nextButton = document.querySelector('#modal-next');
+  // reset inline styling to display the buttons
+  prevButton.style.display = '';
+  nextButton.style.display = '';
   // get id of the employee displayed in the modal
   const displayedEmployeeID = document.querySelector('.modal-name').id;
   // find the index of displayed in full list
@@ -239,6 +244,8 @@ function showModal(employee) {
   modalInfoContainer.innerHTML = '';
   // insert info to the container
   modalInfoContainer.insertAdjacentHTML('beforeend', html);
+  // check toggle button display
+  hideToggle();
   // display the modal - will stay displayed if already there
   modalContainer.style.display = '';
 }
@@ -276,4 +283,26 @@ function parseCell(cell) {
   // so only need to replace 6th char as a space
   const parsedCell = cell.replace(cell[5], ' ');
   return parsedCell;
+}
+/**
+ * show hide toggle buttons
+ */
+function hideToggle() {
+  const prevButton = document.querySelector('#modal-prev');
+  const nextButton = document.querySelector('#modal-next');
+  // get list of visible employees from the DOM
+  const visibleEmployeeList = [...gallery.children].filter((card) => {
+    return card.style.display === '';
+  });
+  const listLength = visibleEmployeeList.length;
+  // get id of the employee displayed in the modal
+  const displayedEmployeeID = document.querySelector('.modal-name').id;
+  // hide prevButton if first employee displayed
+  if (visibleEmployeeList[0].dataset.id === displayedEmployeeID) {
+    prevButton.style.display = 'none';
+  }
+  // hide prevButton if last employee displayed
+  if (visibleEmployeeList[listLength - 1].dataset.id === displayedEmployeeID) {
+    nextButton.style.display = 'none';
+  }
 }
