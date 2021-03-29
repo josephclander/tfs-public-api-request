@@ -50,8 +50,7 @@ function searchSubmitHandler() {
   const query = document.querySelector('#search-input').value.toLowerCase();
   const employeeDOMList = [...gallery.children];
   for (let employee of employeeDOMList) {
-    const dataName = employee.querySelector('#name').textContent.toLowerCase();
-    const employeeName = employee.querySelector('#name');
+    const dataName = employee.querySelector('#name').textContent;
     const address = employee
       .querySelector('#name')
       .nextElementSibling.nextElementSibling.textContent.toLowerCase();
@@ -64,13 +63,10 @@ function searchSubmitHandler() {
       employee.style.display = 'none';
     }
     // get the index of the match
-    // create data name so text in search is constant
-
-    const matchStart = dataName.indexOf(query);
+    const matchStart = dataName.toLowerCase().indexOf(query);
     // this represents the start so get the length too
     const queryLength = query.length;
     const matchEnd = matchStart + queryLength;
-    const wordLength = dataName.length;
     // replace text with a span with highlight class
     const highlighted = `${dataName.substr(
       0,
