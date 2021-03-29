@@ -20,10 +20,6 @@ fetch(
     employeeClickHandler(employeeObjectList);
     addModal();
     modalClickHandler(employeeObjectList);
-    // experiment for text selection
-    const selected = document
-      .querySelectorAll('.card')[1]
-      .querySelector('#name');
   })
   .catch((error) => {
     console.error('Error:', error);
@@ -88,15 +84,6 @@ function searchSubmitHandler() {
     } else {
       employee.querySelector('#name').innerHTML = dataName;
     }
-    // before match + span of match + after match
-    console.log(
-      { dataName },
-      { matchStart },
-      { queryLength },
-      { matchEnd },
-      { wordLength },
-      { highlighted }
-    );
   }
 }
 // ---------------------------------------
