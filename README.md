@@ -1,10 +1,14 @@
 # Public API Requests
 
-For this Treehouse assignment, you'll build an app for a fictional company called Awesome Startup, a distributed company with remote employees working all over the world. They need a smart way for employees to share contact information with each other.
+A client task to create a site for a fictional company called Awesome Startup, a distributed company with remote employees working all over the world. They need a smart way for employees to share contact information with each other.
 
 You’ll use the Random User Generator API (https://randomuser.me/) to grab information for 12 random “employees,” and use that data to build a prototype for an Awesome Startup employee directory.
 
-## Table of Contents
+## Screenshots
+
+<img width="300px" src="https://user-images.githubusercontent.com/19231569/214103642-461cba20-98db-4b50-ad9d-a2ddf237faca.png"> <img width="300px" src="https://user-images.githubusercontent.com/19231569/214103756-eec6fbb5-1a03-474e-8c8d-98ff5bfc07c8.png"> <img width="300px" src="https://user-images.githubusercontent.com/19231569/214103768-870f4315-c947-4ea7-b251-3108094c1485.png">
+
+## Table of Contents!
 
 [Instructions](#instructions)
 
