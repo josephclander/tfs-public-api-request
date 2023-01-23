@@ -131,7 +131,7 @@ Functionality is the same. The search input cancel button is different across br
 I completed the Treehouse Frontend Techdegree in January and this project was a part of the course. Many elements are shared but a greater emphasis was put on the building of the HTML and CSS structure.
 Please take a look to see how I constructed it using the `Gulp` build tool and `Sass`:
 
-[Treehouse Frontend Employee Directory Source Code](https://github.com/josephclander/Treehouse_Employee_Directory)
+[Treehouse Frontend Employee Directory Source Code]([https://github.com/josephclander/Treehouse_Employee_Directory](https://github.com/josephclander/JS_search_employee_directory))
 
 You can see it deployed on Github pages:
-[Employee Directory](https://josephclander.github.io/Treehouse_Employee_Directory/)
+[Employee Directory](https://josephclander.github.io/JS_search_employee_directory/)
